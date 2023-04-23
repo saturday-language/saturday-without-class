@@ -1,0 +1,19 @@
+def a = "global a";
+def b = "global b";
+def c = "global c";
+{
+    def a = "outer a";
+    def b = "outer b";
+    {
+        def a = "inner a";
+        print a;
+        print b;
+        print c;
+    }
+    print a;
+    print b;
+    print c;
+}
+print a;
+print b;
+print c;

@@ -1,0 +1,14 @@
+def a = 1;
+if a == 1 {
+    print "yes";
+} else {
+    print "no";
+}
+
+if 4 == 5 {
+    print "yes";
+}
+
+if 5 == 5 {
+    print "yes";
+}

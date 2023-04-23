@@ -1,0 +1,17 @@
+def a = "test";
+
+fun test() {
+    def i = 0;
+
+    fun closure() {
+        i = i + 1;
+        print a;
+        return i;
+    }
+
+    return closure;
+}
+
+def makeClosure = test();
+print makeClosure();
+print makeClosure();
