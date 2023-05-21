@@ -55,9 +55,10 @@ impl Saturday {
 
   fn run_file(&self, path: &str) -> io::Result<()> {
     let buf = std::fs::read_to_string(path)?;
-    if self.run(buf).is_err() {
-      // Ignore: error was already reported
-      std::process::exit(65);
+    match self.run(buf) {
+      Ok(_) => std::process::exit(0),
+      Err(SaturdayResult::RuntimeError { .. }) => std::process::exit(70),
+      _ => std::process::exit(65),
     }
 
     Ok(())
@@ -100,7 +101,9 @@ impl Saturday {
       resolver.resolve(&Rc::clone(&s))?;
 
       if resolver.success() {
-        self.interpreter.interpreter(&Rc::clone(&s));
+        self.interpreter.interpreter(&Rc::clone(&s))?;
+      } else {
+        std::process::exit(65);
       }
     }
 

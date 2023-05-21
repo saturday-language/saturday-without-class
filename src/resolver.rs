@@ -92,7 +92,11 @@ impl<'a> Resolver<'a> {
     }
   }
 
-  fn resolve_function(&self, function: &FunctionStmt, f_type: FunctionType) -> Result<(), SaturdayResult> {
+  fn resolve_function(
+    &self,
+    function: &FunctionStmt,
+    f_type: FunctionType,
+  ) -> Result<(), SaturdayResult> {
     let enclosing_function = self.current_function.replace(f_type);
     self.begin_scope();
 
@@ -110,7 +114,7 @@ impl<'a> Resolver<'a> {
 
   fn error(&self, token: &Token, message: &str) {
     self.had_error.replace(true);
-    SaturdayResult::runtime_error(token, message);
+    SaturdayResult::parse_error(token, message);
   }
 }
 
@@ -248,15 +252,17 @@ impl<'a> ExprVisitor<()> for Resolver<'a> {
         .last()
         .unwrap()
         .borrow()
-        .get(&expr.name.as_string()).copied() == Some(false)
+        .get(&expr.name.as_string())
+        .copied()
+        == Some(false)
     {
-      Err(SaturdayResult::runtime_error(
+      self.error(
         &expr.name,
         "Can't read local variable in its own initializer.",
-      ))
+      )
     } else {
       self.resolve_local(wrapper, &expr.name);
-      Ok(())
     }
+    Ok(())
   }
 }

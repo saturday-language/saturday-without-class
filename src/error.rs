@@ -53,11 +53,19 @@ impl SaturdayResult {
 
   fn report(&self, loc: &str) {
     match self {
-      Self::ParseError { token, message } | Self::RuntimeError { token, message } => {
+      Self::ParseError { token, message } => {
+        eprintln!(
+          "[line {}] Error at '{}': {}",
+          token.line,
+          token.as_string(),
+          message
+        );
+      }
+      Self::RuntimeError { token, message } => {
         if token.is(TokenType::Eof) {
-          eprintln!("{} at end {}", token.line, message);
+          eprintln!("[line {}] Error at end: {}", token.line, message);
         } else {
-          eprintln!("line {} at '{}' {}", token.line, token.as_string(), message);
+          eprintln!("{}\n[line {}]", message, token.line);
         }
       }
       Self::SystemError { message } => {

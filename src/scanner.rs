@@ -129,7 +129,7 @@ impl Scanner {
       '0'..='9' => {
         self.number();
       }
-      _ if c.is_ascii_alphabetic() || c == '_' => {
+      _ if c.is_alphabetic() || c == '_' => {
         self.identifier();
       }
       _ => {
@@ -171,7 +171,7 @@ impl Scanner {
 
   fn is_alpha_numeric(ch: Option<char>) -> bool {
     if let Some(ch) = ch {
-      ch.is_ascii_alphanumeric()
+      ch.is_ascii_alphanumeric() || ch == '_'
     } else {
       false
     }
