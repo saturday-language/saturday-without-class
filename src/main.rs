@@ -60,8 +60,6 @@ impl Saturday {
       Err(SaturdayResult::RuntimeError { .. }) => std::process::exit(70),
       _ => std::process::exit(65),
     }
-
-    Ok(())
   }
 
   fn run_prompt(&self) {
@@ -95,18 +93,15 @@ impl Saturday {
     let mut parser = Parser::new(tokens);
     let statements = parser.parse()?;
 
-    if parser.success() {
-      let resolver = Resolver::new(&self.interpreter);
-      let s = Rc::new(statements);
-      resolver.resolve(&Rc::clone(&s))?;
+    let resolver = Resolver::new(&self.interpreter);
+    let s = Rc::new(statements);
+    resolver.resolve(&Rc::clone(&s))?;
 
-      if resolver.success() {
-        self.interpreter.interpreter(&Rc::clone(&s))?;
-      } else {
-        std::process::exit(65);
-      }
+    if resolver.success() {
+      self.interpreter.interpreter(&Rc::clone(&s))?;
+    } else {
+      std::process::exit(65);
     }
-
     Ok(())
   }
 }

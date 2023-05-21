@@ -9,9 +9,14 @@ pub enum SaturdayResult {
   SystemError { message: String },
   ReturnValue { value: Object },
   Break,
+  Fail,
 }
 
 impl SaturdayResult {
+  pub fn fail() -> SaturdayResult {
+    SaturdayResult::Fail
+  }
+
   pub fn return_value(value: Object) -> SaturdayResult {
     SaturdayResult::ReturnValue { value }
   }
@@ -75,6 +80,9 @@ impl SaturdayResult {
         eprintln!("[line {}] Error{}: {}", line, loc, message);
       }
       Self::Break | Self::ReturnValue { .. } => {}
+      Self::Fail => {
+        panic!("should not get here")
+      }
     };
   }
 }

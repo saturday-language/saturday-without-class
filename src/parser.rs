@@ -27,10 +27,6 @@ impl<'a> Parser<'a> {
     }
   }
 
-  pub fn success(&self) -> bool {
-    !self.had_error
-  }
-
   /// # 解析方法，调用expression解析tokens生成表达式
   pub fn parse(&mut self) -> Result<Vec<Rc<Stmt>>, SaturdayResult> {
     let mut statements = Vec::new();
@@ -38,7 +34,11 @@ impl<'a> Parser<'a> {
       statements.push(self.declaration()?);
     }
 
-    Ok(statements)
+    if self.had_error {
+      Err(SaturdayResult::fail())
+    } else {
+      Ok(statements)
+    }
   }
 
   fn declaration(&mut self) -> Result<Rc<Stmt>, SaturdayResult> {

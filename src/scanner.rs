@@ -133,9 +133,9 @@ impl Scanner {
         self.identifier();
       }
       _ => {
-        return Err(SaturdayResult::error(self.line, "Unexpected character"));
+        SaturdayResult::error(self.line, "Unexpected character");
       }
-    }
+    };
 
     Ok(())
   }
